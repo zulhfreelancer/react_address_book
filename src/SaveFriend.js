@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { base } from "./base";
+import PropTypes from 'prop-types';
 
 class SaveFriend extends Component {
   constructor(props) {
@@ -92,23 +93,33 @@ class SaveFriend extends Component {
 
   render() {
     return (
+      <div className="col-md-6 offset-md-3">
+      <br/>
       <form onSubmit={
           this.isEditRoute(this.props.location.pathname)
           ? this.onEditSubmit : this.onSubmit }>
+          <div className="form-group">
           <label>Name</label><br/>
           <input
             value={this.state.friend_name}
             onChange={this.handleNameChange}
+            className="form-control"
+            required
           />
-          <br/>
+          </div>
+          <div className="form-group">
           <label>Email</label><br/>
           <input
             value={this.state.friend_email}
             onChange={this.handleEmailChange}
+            className="form-control"
+            required
+            type="email"
           />
-          <br/><br/>
-          <button>Save</button>
+          </div>
+          <button className="btn btn-success btn-block">Save</button>
       </form>
+      </div>
     );
   }
 }

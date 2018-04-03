@@ -16,22 +16,22 @@ class Home extends Component {
   }
 
   onDelete(key) {
-    base.remove(`friends/${key}`).then(() => {
-      this.loadData();
-    }).catch(error => {
-      // handle error
-    });
+    var confirmDelete = window.confirm("Are you sure to delete?");
+    if (confirmDelete === true) {
+      base.remove(`friends/${key}`).then(() => {
+        this.loadData();
+      }).catch(error => {
+        // handle error
+      });
+    }
   }
 
   loadData() {
-    base.fetch('friends', {
+    this.friendsRef = base.syncState('friends', {
       context: this,
+      state: 'friends',
       asArray: true
-    }).then(data => {
-      this.setState({ friends: data })
-    }).catch(error => {
-      // handle error
-    })
+    });
   }
 
   componentWillMount() {
@@ -50,26 +50,43 @@ class Home extends Component {
     if (!this.state.friends.length) { return null }
 
     return (
-      this.state.friends.map(friend => {
-        return (
-          <p key={friend.key}>
-            {friend.name}
-            {` (`}
-            {friend.email}
-            {`) `}
-            <button
-              onClick={() => this.onEdit(friend.key)}>
-              Edit
-            </button>
-            {` `}
-            <button
-              onClick={() => this.onDelete(friend.key)}>
-              Delete
-            </button>
-          </p>
-        )
-      })
+      <table className="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th colSpan={2}></th>
+          </tr>
+        </thead>
+        <tbody>
+            {
+              this.state.friends.map(friend => {
+                return (
+                  <tr key={friend.key}>
+                    <td>{friend.name}</td>
+                    <td>{friend.email}</td>
+                    <td>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => this.onEdit(friend.key)}>
+                        Edit
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => this.onDelete(friend.key)}>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                )
+              })
+            }
+        </tbody>
+      </table>
     )
+
   }
 }
 
